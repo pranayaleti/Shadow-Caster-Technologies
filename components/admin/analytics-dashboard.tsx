@@ -2,6 +2,8 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { TrendingUp, TrendingDown, BarChart3, PieChart as PieChartIcon, LineChart as LineChartIcon, ArrowUpRight, ArrowDownRight } from 'lucide-react'
 import { 
   LineChart, 
   Line, 
@@ -55,34 +57,92 @@ export function AnalyticsDashboard({ stats }: any) {
         animate={{ opacity: 1, y: 0 }}
         className="mb-8"
       >
-        <h1 className="text-4xl font-bold font-display gradient-text mb-2">
-          Analytics Dashboard
-        </h1>
-        <p className="text-text-secondary">
-          Comprehensive analytics and insights
-        </p>
+        <div>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-4xl font-bold font-display gradient-text">
+              Analytics Dashboard
+            </h1>
+            <span className="px-3 py-1 bg-purple-500/20 text-purple-400 text-xs font-semibold rounded-full border border-purple-500/30">
+              DATA & INSIGHTS
+            </span>
+          </div>
+          <p className="text-text-secondary">
+            Deep insights, trends, and performance metrics
+          </p>
+        </div>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        {Object.entries(stats).map(([key, value], index) => (
-          <motion.div
-            key={key}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-          >
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg capitalize">
-                {key.replace(/([A-Z])/g, ' $1').trim()}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold font-display">{value as number}</div>
-            </CardContent>
-          </Card>
-          </motion.div>
-        ))}
+        {Object.entries(stats).map(([key, value], index) => {
+          const getHref = (key: string) => {
+            switch (key) {
+              case 'totalClients':
+                return '/admin/clients'
+              case 'activeSubscriptions':
+                return '/admin/clients'
+              case 'totalCampaigns':
+                return '/admin/campaigns'
+              case 'totalRevenue':
+                return '/admin/analytics'
+              default:
+                return '#'
+            }
+          }
+
+          const getIcon = (key: string) => {
+            switch (key) {
+              case 'totalClients':
+                return <BarChart3 className="w-5 h-5 text-primary" />
+              case 'activeSubscriptions':
+                return <TrendingUp className="w-5 h-5 text-green-500" />
+              case 'totalCampaigns':
+                return <PieChartIcon className="w-5 h-5 text-blue-500" />
+              case 'totalRevenue':
+                return <LineChartIcon className="w-5 h-5 text-purple-500" />
+              default:
+                return null
+            }
+          }
+
+          // Mock trend data (in real app, calculate from previous period)
+          const mockTrend = Math.random() > 0.5 ? 'up' : 'down'
+          const mockTrendValue = Math.floor(Math.random() * 20) + 5
+
+          return (
+            <motion.div
+              key={key}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <Link href={getHref(key)}>
+                <Card className="cursor-pointer hover:shadow-soft transition-all bg-gradient-to-br from-surface to-surface/50">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg capitalize">
+                        {key.replace(/([A-Z])/g, ' $1').trim()}
+                      </CardTitle>
+                      {getIcon(key)}
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-3xl font-bold font-display mb-2">
+                      {key === 'totalRevenue' ? `$${(value as number).toLocaleString()}` : value as number}
+                    </div>
+                    <div className={`flex items-center gap-1 text-sm ${mockTrend === 'up' ? 'text-green-500' : 'text-red-500'}`}>
+                      {mockTrend === 'up' ? (
+                        <ArrowUpRight className="w-4 h-4" />
+                      ) : (
+                        <ArrowDownRight className="w-4 h-4" />
+                      )}
+                      <span>{mockTrendValue}% from last month</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            </motion.div>
+          )
+        })}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">

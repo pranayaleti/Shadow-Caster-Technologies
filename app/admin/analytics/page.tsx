@@ -10,11 +10,18 @@ export default async function AnalyticsPage() {
     return null
   }
 
+  const activeSubscriptions = await prisma.subscription.findMany({
+    where: { status: 'ACTIVE' },
+    include: { plan: true },
+  })
+
+  const totalRevenue = activeSubscriptions.reduce((sum, sub) => sum + (sub.plan?.price || 0), 0)
+
   const stats = {
     totalClients: await prisma.user.count({ where: { role: 'CLIENT' } }),
     activeSubscriptions: await prisma.subscription.count({ where: { status: 'ACTIVE' } }),
     totalCampaigns: await prisma.campaign.count(),
-    totalRevenue: 0, // Calculate from subscriptions
+    totalRevenue: totalRevenue,
   }
 
   return <AnalyticsDashboard stats={stats} />

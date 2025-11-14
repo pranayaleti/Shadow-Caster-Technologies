@@ -33,7 +33,7 @@
    
    This creates:
    - Admin user: `admin@shadowcastertech.com` / `admin123`
-   - Test client: `client@example.com` / `client123`
+   - Test client: `client@shadowcastertech.com` / `client123`
    - Sample plans and services
 
 5. **Run development server**
@@ -48,7 +48,7 @@
 
 After seeding:
 - **Admin**: admin@shadowcastertech.com / admin123
-- **Client**: client@example.com / client123
+- **Client**: client@shadowcastertech.com / client123
 
 ## Next Steps
 

@@ -8,6 +8,51 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
+interface TestCredentialCardProps {
+  title: string
+  email: string
+  password: string
+  role: string
+  onFill: () => void
+}
+
+function TestCredentialCard({ title, email, password, role, onFill }: TestCredentialCardProps) {
+  return (
+    <div className="p-3 bg-surface/50 rounded-md border border-primary/10">
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          <div className="flex items-center justify-between mb-3">
+            <p className="font-semibold text-sm">{title}</p>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={onFill}
+              className="text-xs px-4 py-1.5 h-auto border-primary/30 text-text-secondary hover:text-primary hover:bg-primary/5"
+            >
+              Fill
+            </Button>
+          </div>
+          <div className="space-y-1 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="text-text-secondary w-16">Email:</span>
+              <span className="font-mono text-text">{email}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-text-secondary w-16">Password:</span>
+              <span className="font-mono text-text">{password}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-text-secondary w-16">Role:</span>
+              <span className="text-text">{role}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function SignInPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
@@ -47,6 +92,7 @@ export default function SignInPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="w-full max-w-md"
+        suppressHydrationWarning
       >
         <Card>
           <CardHeader className="text-center">
@@ -118,6 +164,38 @@ export default function SignInPage() {
                 Sign up
               </Link>
             </p>
+            
+            {/* Test Credentials */}
+            <div className="mt-6 p-4 bg-primary/10 border border-primary/20 rounded-md">
+              <p className="text-sm font-semibold text-primary mb-3 text-center">
+                Test Credentials
+              </p>
+              <p className="text-xs text-text-secondary mb-4 text-center">
+                Use these credentials to sign in for testing purposes
+              </p>
+              <div className="space-y-3">
+                <TestCredentialCard
+                  title="Admin Account"
+                  email="admin@shadowcastertech.com"
+                  password="admin123"
+                  role="Administrator"
+                  onFill={() => {
+                    setEmail('admin@shadowcastertech.com')
+                    setPassword('admin123')
+                  }}
+                />
+                <TestCredentialCard
+                  title="Client Account"
+                  email="client@shadowcastertech.com"
+                  password="client123"
+                  role="Client"
+                  onFill={() => {
+                    setEmail('client@shadowcastertech.com')
+                    setPassword('client123')
+                  }}
+                />
+              </div>
+            </div>
           </CardContent>
         </Card>
       </motion.div>
